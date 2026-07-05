@@ -3,6 +3,7 @@ package io.github.lnyocly.ai4j.plugin.dynamicworkflow;
 final class DynamicWorkflowPayloads {
 
     private static final int MAX_ARGUMENTS_RAW_CHARS = 64 * 1024;
+    private static final String SPEC_VERSION = "ai4j.dynamic-workflow/v1";
 
     private DynamicWorkflowPayloads() {
     }
@@ -11,6 +12,7 @@ final class DynamicWorkflowPayloads {
         JsonValue raw = cap(emptyToDefault(arguments, "{}"));
         return "{"
                 + "\"type\":\"ai4j.dynamic_workflow.request\","
+                + "\"workflowSpecVersion\":\"" + SPEC_VERSION + "\","
                 + "\"source\":\"tool\","
                 + "\"tool\":\"" + DynamicWorkflowExtension.TOOL_NAME + "\","
                 + "\"status\":\"pending_host_workflow_execution\","
@@ -26,6 +28,7 @@ final class DynamicWorkflowPayloads {
         JsonValue goal = cap(emptyToDefault(arguments, "Design and run a dynamic workflow for the current user goal."));
         return "{"
                 + "\"type\":\"ai4j.dynamic_workflow.request\","
+                + "\"workflowSpecVersion\":\"" + SPEC_VERSION + "\","
                 + "\"source\":\"command\","
                 + "\"command\":\"" + DynamicWorkflowExtension.COMMAND_NAME + "\","
                 + "\"status\":\"pending_workflow_synthesis\","

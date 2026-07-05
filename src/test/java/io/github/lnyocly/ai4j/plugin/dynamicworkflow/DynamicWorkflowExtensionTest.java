@@ -59,6 +59,7 @@ public class DynamicWorkflowExtensionTest {
                 "{\"script\":\"export const meta = { name: 'audit', description: 'Audit' }\\nreturn await agent('scan', { label: 'scan' })\",\"background\":true}"));
 
         Assert.assertTrue(result.contains("\"type\":\"ai4j.dynamic_workflow.request\""));
+        Assert.assertTrue(result.contains("\"workflowSpecVersion\":\"ai4j.dynamic-workflow/v1\""));
         Assert.assertTrue(result.contains("\"source\":\"tool\""));
         Assert.assertTrue(result.contains("\"hostAction\":\"execute_dynamic_workflow\""));
         Assert.assertTrue(result.contains("\"status\":\"pending_host_workflow_execution\""));
@@ -77,6 +78,7 @@ public class DynamicWorkflowExtensionTest {
         String result = handler.handle(new ExtensionCommandRequest("workflow", "Audit src for missing auth checks"));
 
         Assert.assertTrue(result.contains("\"source\":\"command\""));
+        Assert.assertTrue(result.contains("\"workflowSpecVersion\":\"ai4j.dynamic-workflow/v1\""));
         Assert.assertTrue(result.contains("\"command\":\"workflow\""));
         Assert.assertTrue(result.contains("\"hostAction\":\"synthesize_dynamic_workflow\""));
         Assert.assertTrue(result.contains("\"goal\":\"Audit src for missing auth checks\""));
