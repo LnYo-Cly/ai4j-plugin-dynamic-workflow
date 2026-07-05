@@ -188,7 +188,8 @@ That split keeps the extension safe by default: plugin installation cannot grant
 | `src/main/java/.../DynamicWorkflowPayloads.java` | Stable JSON envelope construction and 64 KiB argument cap. |
 | `src/main/resources/skills/dynamic-workflow/SKILL.md` | Agent guidance for deciding when to request a workflow. |
 | `src/main/resources/prompts/dynamic-workflow-script.md` | Prompt guidance for deterministic workflow script generation. |
-| `examples/repository-audit.workflow.js` | Copyable script example for host/runtime experiments. |
+| `examples/repository-audit.workflow.js` | Copyable workflow script example for host/runtime experiments. |
+| `src/test/java/.../DynamicWorkflowUsageDemo.java` | Complete Java envelope demo compiled by `mvn test`. |
 | `.github/workflows/java-regression.yml` | Java 8 Maven regression gate. |
 
 ## Current boundary
@@ -215,6 +216,17 @@ Left to AI4J host/runtime layers:
 - git worktree isolation
 - saved workflows
 
+## Complete Java envelope demo
+
+`examples/repository-audit.workflow.js` is a workflow-script example. The complete Java usage demo is `src/test/java/.../DynamicWorkflowUsageDemo.java`: it wires the extension registry, exposes `workflow`, sends a script, and prints the JSON envelope.
+
+Run the normal test command to compile the demo:
+
+```bash
+mvn -DskipTests=false test
+```
+
+Expected envelope fields include `type: ai4j.dynamic_workflow.request`, `workflowSpecVersion: ai4j.dynamic-workflow/v1`, and `hostAction: execute_dynamic_workflow`.
 ## Validate
 
 ```bash
