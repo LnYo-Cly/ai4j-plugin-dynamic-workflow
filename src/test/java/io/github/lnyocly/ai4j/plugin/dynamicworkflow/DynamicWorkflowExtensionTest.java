@@ -15,6 +15,11 @@ import io.github.lnyocly.ai4j.extension.validation.ExtensionValidator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class DynamicWorkflowExtensionTest {
@@ -126,12 +131,58 @@ public class DynamicWorkflowExtensionTest {
         Assert.assertTrue("dynamic-workflow extension should be discoverable by ServiceLoader", found);
     }
 
+    @Test
+    public void packagedSkillAndPromptResourcesArePresent() throws Exception {
+        String skill = readResource("skills/dynamic-workflow/SKILL.md");
+        String prompt = readResource("prompts/dynamic-workflow-script.md");
+
+        Assert.assertTrue(skill.contains("Dynamic Workflow Orchestration"));
+        Assert.assertTrue(skill.contains("The plugin returns a host-mediated JSON envelope."));
+        Assert.assertTrue(prompt.contains("First statement must be `export const meta = ...`"));
+        Assert.assertTrue(prompt.contains("Return a compact JSON-serializable final value"));
+    }
+
+    @Test
+    public void usageDemoPrintsTheWorkflowEnvelope() throws Exception {
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream capture = new PrintStream(out, true, StandardCharsets.UTF_8.name());
+        try {
+            System.setOut(capture);
+            DynamicWorkflowUsageDemo.main(new String[0]);
+        } finally {
+            System.setOut(originalOut);
+            capture.close();
+        }
+
+        String result = new String(out.toByteArray(), StandardCharsets.UTF_8).trim();
+        Assert.assertTrue(result, result.contains("\"type\":\"ai4j.dynamic_workflow.request\""));
+        Assert.assertTrue(result, result.contains("\"workflowSpecVersion\":\"ai4j.dynamic-workflow/v1\""));
+        Assert.assertTrue(result, result.contains("\"hostAction\":\"execute_dynamic_workflow\""));
+    }
+
     private static String repeat(char value, int count) {
         StringBuilder builder = new StringBuilder(count);
         for (int i = 0; i < count; i++) {
             builder.append(value);
         }
         return builder.toString();
+    }
+
+    private static String readResource(String path) throws IOException {
+        InputStream in = DynamicWorkflowExtension.class.getClassLoader().getResourceAsStream(path);
+        Assert.assertNotNull("missing classpath resource: " + path, in);
+        try {
+            byte[] bytes = new byte[4096];
+            StringBuilder builder = new StringBuilder();
+            int read;
+            while ((read = in.read(bytes)) != -1) {
+                builder.append(new String(bytes, 0, read, StandardCharsets.UTF_8));
+            }
+            return builder.toString();
+        } finally {
+            in.close();
+        }
     }
 }
 

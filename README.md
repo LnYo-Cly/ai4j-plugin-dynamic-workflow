@@ -236,8 +236,35 @@ mvn -DskipTests=false test
 Expected result:
 
 ```text
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
 BUILD SUCCESS
+```
+
+### Optional live MiniMax smoke
+
+Set `MINIMAX_API_KEY`, then run:
+
+```powershell
+$env:MINIMAX_API_KEY='...'
+$env:MINIMAX_BASE_URL='https://api.minimaxi.com/anthropic'
+$env:MINIMAX_MODEL='MiniMax-M3'
+mvn "-DskipTests=false" "-Dtest=MinimaxAnthropicSmokeTest" "-Dtest.excludedGroups=" test
+```
+
+Optional overrides:
+
+- `MINIMAX_BASE_URL` (default: `https://api.minimaxi.com/anthropic`)
+- `MINIMAX_MODEL` (default: `MiniMax-M3`)
+
+### Optional live MiniMax synthesis smoke
+
+This checks the host-side synthesis step that turns a workflow goal into a deterministic workflow script:
+
+```powershell
+$env:MINIMAX_API_KEY='...'
+$env:MINIMAX_BASE_URL='https://api.minimaxi.com/anthropic'
+$env:MINIMAX_MODEL='MiniMax-M3'
+mvn "-DskipTests=false" "-Dtest=MinimaxAnthropicWorkflowSynthesisSmokeTest" "-Dtest.excludedGroups=" test
 ```
 
 ## License
