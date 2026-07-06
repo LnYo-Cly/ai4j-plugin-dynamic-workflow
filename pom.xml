@@ -44,6 +44,12 @@
             <version>${ai4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>2.0.43</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
@@ -74,4 +80,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>live-ai4j-agent-tests</id>
+            <dependencies>
+                <dependency>
+                    <groupId>io.github.lnyo-cly</groupId>
+                    <artifactId>ai4j-agent</artifactId>
+                    <version>${ai4j.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

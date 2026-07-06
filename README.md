@@ -267,6 +267,35 @@ $env:MINIMAX_MODEL='MiniMax-M3'
 mvn "-DskipTests=false" "-Dtest=MinimaxAnthropicWorkflowSynthesisSmokeTest" "-Dtest.excludedGroups=" test
 ```
 
+### Optional live MiniMax execution smoke
+
+This is the full live closed-loop smoke: MiniMax M3 produces raw workflow JavaScript, the plugin wraps it in a host-mediated `workflow` envelope, the AI4J agent runtime parses and executes it, and each workflow `agent(...)` call invokes a real AI4J `Agent` backed by the MiniMax Anthropic-compatible endpoint.
+
+```powershell
+$env:MINIMAX_API_KEY='...'
+$env:MINIMAX_BASE_URL='https://api.minimaxi.com/anthropic'
+$env:MINIMAX_MODEL='MiniMax-M3'
+mvn -Plive-ai4j-agent-tests "-DskipTests=false" "-Dtest=MinimaxAnthropicWorkflowExecutionSmokeTest" "-Dtest.excludedGroups=" test
+```
+
+To run the normal plugin tests plus all live MiniMax smokes:
+
+```powershell
+mvn -Plive-ai4j-agent-tests "-Dtest.excludedGroups=" -DskipTests=false test
+```
+
+### Optional full live MiniMax + E2B sandbox smoke
+
+This smoke keeps the same dynamic-workflow path and additionally opens a real E2B sandbox from `E2B_API_KEY`, executes a command inside it, then passes the sandbox stdout into a real AI4J `Agent` backed by MiniMax M3.
+
+```powershell
+$env:MINIMAX_API_KEY='...'
+$env:MINIMAX_BASE_URL='https://api.minimaxi.com/anthropic'
+$env:MINIMAX_MODEL='MiniMax-M3'
+$env:E2B_API_KEY='...'
+mvn -Plive-ai4j-agent-tests "-DskipTests=false" "-Dtest=MinimaxAnthropicWorkflowE2BSandboxSmokeTest" "-Dtest.excludedGroups=" test
+```
+
 ## License
 
 Apache-2.0 — see [LICENSE](LICENSE).
